@@ -23,8 +23,14 @@ object BitmapUtil {
         options.inJustDecodeBounds = false
         return BitmapFactory.decodeResource(context.resources, resId, options)
     }
-
-    fun canUseForInBitmap(candidate: Bitmap, targetOptions: BitmapFactory.Options): Boolean {
+    fun initBitmap( context: Context,
+                    resId: Int):Bitmap{
+        val options = BitmapFactory.Options()
+        options.inMutable = true
+        options.inScaled = false
+        return BitmapFactory.decodeResource(context.resources, resId, options)
+    }
+    private fun canUseForInBitmap(candidate: Bitmap, targetOptions: BitmapFactory.Options): Boolean {
         val width = targetOptions.outWidth / Math.max(targetOptions.inSampleSize, 1)
         val height =
             targetOptions.outHeight / Math.max(targetOptions.inSampleSize, 1)
@@ -42,4 +48,5 @@ object BitmapUtil {
             }
             return bytesPerPixel
         }
+
 }

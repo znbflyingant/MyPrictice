@@ -22,7 +22,10 @@ class MediaActivity : AppCompatActivity() {
             val result = withIOContext {
                 val fileName =  "${System.currentTimeMillis()}.mp4"
                 val resultPath = File(externalCacheDir,fileName)
-                MediaOperation().generate(this@MediaActivity,resultPath)
+//                MediaOperation().generate(this@MediaActivity,resultPath)
+                MediaOperation().test(this@MediaActivity)
+
+
             }
             Log.d(TAG,"result:$result dTime:${System.currentTimeMillis()-sTime}")
         }

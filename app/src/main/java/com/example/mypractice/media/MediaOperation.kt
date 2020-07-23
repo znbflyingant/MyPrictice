@@ -3,6 +3,7 @@ package com.example.mypractice.media
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaCodec
@@ -22,6 +23,23 @@ import java.io.File
  * 时间：2019/3/28 13:53
  */
 class MediaOperation {
+    fun test(context: Context){
+        val drawableId = R.drawable.app_scancode_gray
+        for (i in 1..500){
+            if (reuseBitmap==null) {
+                reuseBitmap = BitmapUtil.initBitmap(context,drawableId)
+//                    reuseBitmap?.let{
+//                        val scale = 4f
+//                        val matrix = Matrix()
+//                        matrix.postScale(scale,scale)
+//                        reuseBitmap = Bitmap.createBitmap(it,0,0,it.width,it.height,matrix,true)
+//                    }
+            }else{
+                reuseBitmap = BitmapUtil.getBitmap(context,reuseBitmap!!,drawableId)
+            }
+        }
+
+    }
     companion object {
         private val MIME_TYPE = MediaFormat.MIMETYPE_VIDEO_AVC
         val WIDTH = 720
@@ -55,12 +73,12 @@ class MediaOperation {
             eTime = 2000
             color = Color.RED
             drawableId = R.drawable.app_scancode_inner
-            text = "A"
+            text = "Afffffffff"
         }.let {
             infos.add(it)
         }
         TextInfo().apply {
-            text = "B"
+            text = "Bffffffff"
             sTime = 2000
             eTime = 5500
             color = Color.GREEN
@@ -69,7 +87,7 @@ class MediaOperation {
             infos.add(it)
         }
         TextInfo().apply {
-            text = "C"
+            text = "Cffffffff"
             sTime = 5500
             eTime = 7000
             color = Color.BLUE
@@ -89,19 +107,33 @@ class MediaOperation {
                 val frameCount = (dTime.toFloat()/1000*FRAMES_PER_SECOND).toInt()
                 Log.d(TAG,"index:$index dTime:$dTime frameCount:$frameCount")
                 val paint = Paint()
-                paint.color = textInfo.color
-                paint.textSize = 18f
-                reuseBitmap = (context.resources.getDrawable(textInfo.drawableId) as BitmapDrawable).bitmap
+                with(paint){
+                    color = textInfo.color
+                    textSize = 18f
+                    strokeWidth = 12f
+                    style = Paint.Style.FILL
+                }
+
+
+//                reuseBitmap = (context.resources.getDrawable(textInfo.drawableId) as BitmapDrawable).bitmap
                 if (reuseBitmap==null) {
-                    reuseBitmap = (context.resources.getDrawable(textInfo.drawableId) as BitmapDrawable).bitmap
+                    reuseBitmap = BitmapUtil.initBitmap(context,textInfo.drawableId)
+//                    reuseBitmap?.let{
+//                        val scale = 4f
+//                        val matrix = Matrix()
+//                        matrix.postScale(scale,scale)
+//                        reuseBitmap = Bitmap.createBitmap(it,0,0,it.width,it.height,matrix,true)
+//                    }
                 }else{
                     reuseBitmap = BitmapUtil.getBitmap(context,reuseBitmap!!,textInfo.drawableId)
                 }
+                Log.d(TAG,"${reuseBitmap?.width} ${reuseBitmap?.height}")
                 for (i in 1..frameCount){
                     drainEncoder(false)
                     val canvas = mInputSurface!!.lockCanvas(null)
-                    canvas.drawBitmap(reuseBitmap!!,0f,0f,null)
-                    canvas.drawText(textInfo.text,0f,0f,paint)
+                    canvas.drawColor(Color.BLACK)
+                    canvas.drawBitmap(reuseBitmap!!,WIDTH/2f, HEIGHT/2f,null)
+                    canvas.drawText(textInfo.text,WIDTH/2f,WIDTH/2f,paint)
                     mInputSurface!!.unlockCanvasAndPost(canvas)
 
                 }
