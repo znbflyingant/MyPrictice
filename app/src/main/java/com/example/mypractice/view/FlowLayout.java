@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"ALL", "AlibabaClassMustHaveAuthor"})
 public class FlowLayout extends ViewGroup {
     //记录每个View的位置
     private List<ChildPos> mChildPos = new ArrayList<>();
